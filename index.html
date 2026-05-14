@@ -55,19 +55,6 @@
             animation: pulse 10s infinite alternate;
         }
 
-        .accent {
-            position: fixed;
-            border: 1px solid rgba(255,255,255,0.1);
-            width: 100px;
-            height: 100px;
-            top: 20%;
-            right: 15%;
-            transform: rotate(45deg);
-            animation: float 6s infinite ease-in-out;
-            z-index: 0;
-            pointer-events: none;
-        }
-
         @keyframes pulse {
             0% {
                 transform: translate(-50%, -50%) scale(1);
@@ -80,17 +67,7 @@
             }
         }
 
-        @keyframes float {
-            0%, 100% {
-                transform: rotate(45deg) translateY(0);
-            }
-
-            50% {
-                transform: rotate(45deg) translateY(-20px);
-            }
-        }
-
-        /* --- CONTENT STYLING --- */
+        /* --- SHOWCASE --- */
         section {
             min-height: 100vh;
             display: flex;
@@ -135,7 +112,6 @@
             color: #00bcd4;
         }
 
-        /* --- CENTERED SHOWCASE WITH ARROWS --- */
         .showcase-wrapper {
             width: 100%;
             display: flex;
@@ -159,11 +135,10 @@
                 display: none;
             }
 
-            /* Dynamic Centering Spacers */
             .video-scroll-container::before,
             .video-scroll-container::after {
                 content: '';
-                flex: 0 0 calc(50vw - 400px); /* Centers 800px video */
+                flex: 0 0 calc(50vw - 400px);
                 background: rgba(255, 255, 255, 0.02);
                 backdrop-filter: blur(5px);
                 pointer-events: none;
@@ -177,8 +152,9 @@
             backdrop-filter: blur(5px);
             scroll-snap-align: center;
             overflow: hidden;
-            transition: all 0.6s ease;
-            opacity: 0.3; /* Faded by default */
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0.3;
+            will-change: transform, opacity; /* GPU Optimization */
         }
 
             .video-item.is-active {
@@ -193,7 +169,6 @@
                 object-fit: cover;
             }
 
-        /* Nav Arrows */
         .nav-arrow {
             position: absolute;
             top: 40%;
@@ -244,7 +219,6 @@
             text-transform: uppercase;
         }
 
-        /* --- CONTACT & FOOTER --- */
         .contact-box {
             background: rgba(10, 10, 10, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -281,17 +255,33 @@
             text-transform: uppercase;
         }
 
-        @media (max-width: 1000px) {
+        @media (max-width: 600px) {
+            .brand {
+                /* Reduce letter spacing so it doesn't overflow the sides */
+                letter-spacing: 4px;
+                /* Ensure it takes up full width to allow text-align: center to work */
+                width: 100%;
+                padding: 0 10px;
+            }
+
+            .tagline {
+                letter-spacing: 2px;
+                font-size: 0.8rem;
+                width: 90%;
+            }
+
+            .accent {
+                display: none;
+            }
+
             .video-item {
                 flex: 0 0 85vw;
             }
 
-            .video-scroll-container::before, .video-scroll-container::after {
+            /* Adjust spacers for mobile to keep the first video centered */
+            .video-scroll-container::before,
+            .video-scroll-container::after {
                 flex: 0 0 7.5vw;
-            }
-
-            .nav-arrow {
-                display: none;
             }
         }
     </style>
@@ -302,36 +292,34 @@
         <div class="gradient-sphere"></div>
     </div>
 
-    <div class="accent"></div>
-
     <section>
         <div class="brand">ALLPOLY</div>
-        <div class="tagline">Animation & Game Dev Services</div>
+        <div class="tagline">Animation & Game Dev by Toupoc Allen</div>
     </section>
 
     <section id="work">
         <h2 class="section-title">Showcase</h2>
-
         <div class="showcase-wrapper">
-            <button class="nav-arrow arrow-left" onclick="scrollShowcase(-1)">&#8249;</button>
-            <button class="nav-arrow arrow-right" onclick="scrollShowcase(1)">&#8250;</button>
+            <button class="nav-arrow arrow-left" onclick="scrollShowcase(-1)" aria-label="Previous Video">&#8249;</button>
+            <button class="nav-arrow arrow-right" onclick="scrollShowcase(1)" aria-label="Next Video">&#8250;</button>
 
             <div class="video-scroll-container" id="videoSlider">
-                <div class="video-item"><video muted loop playsinline><source src="videos/01.mp4" type="video/mp4"></video></div>
-                <div class="video-item"><video muted loop playsinline><source src="videos/06.mp4" type="video/mp4"></video></div>
-                <div class="video-item"><video muted loop playsinline><source src="videos/02.mp4" type="video/mp4"></video></div>
-                <div class="video-item"><video muted loop playsinline><source src="videos/03.mp4" type="video/mp4"></video></div>
-                <div class="video-item"><video muted loop playsinline><source src="videos/04.mp4" type="video/mp4"></video></div>
-                <div class="video-item"><video muted loop playsinline><source src="videos/09.mp4" type="video/mp4"></video></div>
-                <div class="video-item"><video muted loop playsinline><source src="videos/05.mp4" type="video/mp4"></video></div>
-                <div class="video-item"><video muted loop playsinline><source src="videos/07.mp4" type="video/mp4"></video></div>
-                <div class="video-item"><video muted loop playsinline><source src="videos/08.mp4" type="video/mp4"></video></div>
-                <div class="video-item"><video muted loop playsinline><source src="videos/10.mp4" type="video/mp4"></video></div>
+                <!-- Optimization: added preload="metadata" -->
+                <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/01.mp4" type="video/mp4"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/06.mp4" type="video/mp4"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/02.mp4" type="video/mp4"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/03.mp4" type="video/mp4"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/04.mp4" type="video/mp4"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/09.mp4" type="video/mp4"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/05.mp4" type="video/mp4"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/07.mp4" type="video/mp4"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/08.mp4" type="video/mp4"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/10.mp4" type="video/mp4"></video></div>
             </div>
 
             <div class="fixed-caption">
-                <div class="project-title">Legacy Reels</div>
-                <div class="project-desc">Cinematic Chronicles of Client Success</div>
+                <div class="project-title">Legacy Animation</div>
+                <div class="project-desc">Years of Client Satisfaction</div>
             </div>
         </div>
     </section>
@@ -339,32 +327,32 @@
     <section id="contact">
         <div class="contact-box">
             <h2 class="section-title">Contact</h2>
-            <p style="color: #888;">Let's build something unique together.</p>
+            <p style="color: #888;">Let's make something great.</p>
             <a href="mailto:hello@allpoly.net" class="email-link">Get in Touch</a>
         </div>
     </section>
 
-    <footer>
-        &copy; 2026 AllPoly LLC. ALL RIGHTS RESERVED.
-    </footer>
+    <footer>&copy; 2026 AllPoly LLC. ALL RIGHTS RESERVED.</footer>
 
     <script>
         function scrollShowcase(direction) {
             const slider = document.getElementById('videoSlider');
-            const itemWidth = slider.querySelector('.video-item').offsetWidth + 40;
+            const item = slider.querySelector('.video-item');
+            if (!item) return;
+            const itemWidth = item.offsetWidth + 40;
             slider.scrollBy({ left: direction * itemWidth, behavior: 'smooth' });
         }
 
-        // Observer: Only play/brighten videos when centered
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const video = entry.target.querySelector('video');
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-active');
-                    video.play();
+                    // Optimization: check if play() is already running or if video exists
+                    if (video) video.play().catch(e => console.log("Playback interrupted"));
                 } else {
                     entry.target.classList.remove('is-active');
-                    video.pause();
+                    if (video) video.pause();
                 }
             });
         }, {
