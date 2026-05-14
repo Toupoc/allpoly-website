@@ -55,6 +55,19 @@
             animation: pulse 10s infinite alternate;
         }
 
+        .accent {
+            position: fixed;
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            right: 15%;
+            transform: rotate(45deg);
+            animation: float 6s infinite ease-in-out;
+            z-index: 0;
+            pointer-events: none;
+        }
+
         @keyframes pulse {
             0% {
                 transform: translate(-50%, -50%) scale(1);
@@ -67,7 +80,17 @@
             }
         }
 
-        /* --- SHOWCASE --- */
+        @keyframes float {
+            0%, 100% {
+                transform: rotate(45deg) translateY(0);
+            }
+
+            50% {
+                transform: rotate(45deg) translateY(-20px);
+            }
+        }
+
+        /* --- CONTENT STYLING --- */
         section {
             min-height: 100vh;
             display: flex;
@@ -77,6 +100,7 @@
             padding: 80px 0;
             position: relative;
             z-index: 1;
+            width: 100%;
         }
 
         .brand {
@@ -91,6 +115,7 @@
             margin-bottom: 10px;
             text-align: center;
             opacity: 0.9;
+            width: 100%;
         }
 
         .tagline {
@@ -101,6 +126,13 @@
             font-weight: 300;
             margin-bottom: 40px;
             text-align: center;
+            width: 100%;
+            line-height: 1.6;
+        }
+
+        /* The fix for your name */
+        .no-break {
+            white-space: nowrap;
         }
 
         .section-title {
@@ -112,6 +144,7 @@
             color: #00bcd4;
         }
 
+        /* --- SHOWCASE --- */
         .showcase-wrapper {
             width: 100%;
             display: flex;
@@ -154,7 +187,7 @@
             overflow: hidden;
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             opacity: 0.3;
-            will-change: transform, opacity; /* GPU Optimization */
+            will-change: transform, opacity;
         }
 
             .video-item.is-active {
@@ -219,6 +252,7 @@
             text-transform: uppercase;
         }
 
+        /* --- CONTACT --- */
         .contact-box {
             background: rgba(10, 10, 10, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -255,19 +289,17 @@
             text-transform: uppercase;
         }
 
-        @media (max-width: 600px) {
+        /* --- MOBILE OPTIMIZATIONS --- */
+        @media (max-width: 768px) {
             .brand {
-                /* Reduce letter spacing so it doesn't overflow the sides */
                 letter-spacing: 4px;
-                /* Ensure it takes up full width to allow text-align: center to work */
-                width: 100%;
-                padding: 0 10px;
+                padding: 0 15px;
             }
 
             .tagline {
                 letter-spacing: 2px;
                 font-size: 0.8rem;
-                width: 90%;
+                padding: 0 20px;
             }
 
             .accent {
@@ -278,10 +310,13 @@
                 flex: 0 0 85vw;
             }
 
-            /* Adjust spacers for mobile to keep the first video centered */
             .video-scroll-container::before,
             .video-scroll-container::after {
                 flex: 0 0 7.5vw;
+            }
+
+            .nav-arrow {
+                display: none;
             }
         }
     </style>
@@ -292,19 +327,23 @@
         <div class="gradient-sphere"></div>
     </div>
 
+    <div class="accent"></div>
+
+    <!-- HERO -->
     <section>
         <div class="brand">ALLPOLY</div>
-        <div class="tagline">Animation & Game Dev by Toupoc Allen</div>
+        <div class="tagline">Animation & Game Dev by <span class="no-break">Toupoc Allen</span></div>
     </section>
 
+    <!-- SHOWCASE -->
     <section id="work">
         <h2 class="section-title">Showcase</h2>
+
         <div class="showcase-wrapper">
-            <button class="nav-arrow arrow-left" onclick="scrollShowcase(-1)" aria-label="Previous Video">&#8249;</button>
-            <button class="nav-arrow arrow-right" onclick="scrollShowcase(1)" aria-label="Next Video">&#8250;</button>
+            <button class="nav-arrow arrow-left" onclick="scrollShowcase(-1)" aria-label="Previous">&#8249;</button>
+            <button class="nav-arrow arrow-right" onclick="scrollShowcase(1)" aria-label="Next">&#8250;</button>
 
             <div class="video-scroll-container" id="videoSlider">
-                <!-- Optimization: added preload="metadata" -->
                 <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/01.mp4" type="video/mp4"></video></div>
                 <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/06.mp4" type="video/mp4"></video></div>
                 <div class="video-item"><video muted loop playsinline preload="metadata"><source src="videos/02.mp4" type="video/mp4"></video></div>
@@ -318,12 +357,13 @@
             </div>
 
             <div class="fixed-caption">
-                <div class="project-title">Legacy Animation</div>
+                <div class="project-title">Legacy Reels</div>
                 <div class="project-desc">Years of Client Satisfaction</div>
             </div>
         </div>
     </section>
 
+    <!-- CONTACT -->
     <section id="contact">
         <div class="contact-box">
             <h2 class="section-title">Contact</h2>
@@ -332,7 +372,9 @@
         </div>
     </section>
 
-    <footer>&copy; 2026 AllPoly LLC. ALL RIGHTS RESERVED.</footer>
+    <footer>
+        &copy; 2026 AllPoly LLC. ALL RIGHTS RESERVED.
+    </footer>
 
     <script>
         function scrollShowcase(direction) {
@@ -348,8 +390,7 @@
                 const video = entry.target.querySelector('video');
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-active');
-                    // Optimization: check if play() is already running or if video exists
-                    if (video) video.play().catch(e => console.log("Playback interrupted"));
+                    if (video) video.play().catch(() => { });
                 } else {
                     entry.target.classList.remove('is-active');
                     if (video) video.pause();
